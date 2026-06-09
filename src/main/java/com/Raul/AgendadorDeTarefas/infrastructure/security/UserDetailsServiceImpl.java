@@ -1,5 +1,7 @@
 package com.Raul.AgendadorDeTarefas.infrastructure.security;
 
+import com.Raul.AgendadorDeTarefas.infrastructure.entity.Usuario;
+import com.Raul.AgendadorDeTarefas.infrastructure.repostitory.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
