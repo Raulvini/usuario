@@ -3,11 +3,12 @@ package com.Raul.AgendadorDeTarefas.business;
 import com.Raul.AgendadorDeTarefas.business.converter.UsuarioConverter;
 import com.Raul.AgendadorDeTarefas.business.dto.UsuarioDTO;
 import com.Raul.AgendadorDeTarefas.infrastructure.exceptions.ConflictException;
+import com.Raul.AgendadorDeTarefas.infrastructure.exceptions.ResourceNotFoundException;
 import com.Raul.AgendadorDeTarefas.infrastructure.repostitory.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -44,5 +45,15 @@ public class UsuarioService {
         return usuarioRepository.existsByEmail(email);
     }
 
+    @Transactional
+    public void deletaUsuarioPorEmail(String email) {
+        usuarioRepository.deleteByEmail(email);
+    }
 
+    public UsuarioDTO buscarUsuarioPorEmail(String email){
+        var usurio = usuarioRepository.findByEmail(email).
+                orElseThrow(()-> new ResourceNotFoundException("Email não encontrado "+ email));
+
+        return usuarioConverter.toUsuarioDTO(usurio);
+    }
 }
