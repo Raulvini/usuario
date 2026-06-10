@@ -6,6 +6,8 @@ import com.Raul.AgendadorDeTarefas.infrastructure.exceptions.ConflictException;
 import com.Raul.AgendadorDeTarefas.infrastructure.exceptions.ResourceNotFoundException;
 import com.Raul.AgendadorDeTarefas.infrastructure.repostitory.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,9 +53,27 @@ public class UsuarioService {
     }
 
     public UsuarioDTO buscarUsuarioPorEmail(String email){
-        var usurio = usuarioRepository.findByEmail(email).
+        var usuario = usuarioRepository.findByEmail(email).
                 orElseThrow(()-> new ResourceNotFoundException("Email não encontrado "+ email));
 
-        return usuarioConverter.toUsuarioDTO(usurio);
+        return usuarioConverter.toUsuarioDTO(usuario);
+    }
+
+    public UsuarioDTO atulaizaDadosUsuario(UsuarioDTO usuarioDTO){
+        var authentication = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        User userSpring = (User) authentication;
+
+        assert userSpring != null;
+        String email = userSpring.getUsername();
+
+        usuarioDTO.setSenha(usuarioDTO.getSenha() != null ? passwordEncoder.encode(usuarioDTO.getSenha()) : null);
+
+        var usuario = usuarioRepository.findByEmail(email).
+                orElseThrow(()-> new ResourceNotFoundException("Email não encontrado "+ email));
+
+        var usuarioUpdate = usuarioConverter.updateUsuario(usuarioDTO, usuario);
+
+        return usuarioConverter.toUsuarioDTO(usuarioRepository.save(usuarioUpdate));
     }
 }

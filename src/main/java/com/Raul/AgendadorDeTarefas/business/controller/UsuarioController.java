@@ -44,6 +44,11 @@ public class UsuarioController {
         return ResponseEntity.ok().build();
     }
 
+    @PutMapping()
+    public ResponseEntity<UsuarioDTO> update(@RequestBody UsuarioDTO usuarioDTO) {
+        return ResponseEntity.ok(usuarioService.atulaizaDadosUsuario(usuarioDTO));
+    }
+
 
 
 }
