@@ -1,6 +1,8 @@
 package com.Raul.AgendadorDeTarefas.business.controller;
 
 import com.Raul.AgendadorDeTarefas.business.UsuarioService;
+import com.Raul.AgendadorDeTarefas.business.dto.EnderecoDTO;
+import com.Raul.AgendadorDeTarefas.business.dto.TelefoneDTO;
 import com.Raul.AgendadorDeTarefas.business.dto.UsuarioDTO;
 import com.Raul.AgendadorDeTarefas.infrastructure.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -48,6 +50,19 @@ public class UsuarioController {
     public ResponseEntity<UsuarioDTO> update(@RequestBody UsuarioDTO usuarioDTO) {
         return ResponseEntity.ok(usuarioService.atulaizaDadosUsuario(usuarioDTO));
     }
+
+    @PutMapping("/telefone")
+    public ResponseEntity<TelefoneDTO> updateTelefone(@RequestBody TelefoneDTO telefoneDTO,
+                                      @RequestParam("id") Long id) {
+        return ResponseEntity.ok(usuarioService.atualizarTelefone(id, telefoneDTO));
+    }
+
+    @PutMapping("/endereco")
+    public ResponseEntity<EnderecoDTO> updateEendereco(@RequestBody EnderecoDTO enderecoDTO,
+                                                       @RequestParam("id") Long id) {
+        return ResponseEntity.ok(usuarioService.atualizarEndereco(id, enderecoDTO));
+    }
+
 
 
 
